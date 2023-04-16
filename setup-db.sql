@@ -1,5 +1,5 @@
 CREATE TABLE "Event" (
-  "ID"  serial  NOT NULL  UNIQUE,
+  "ID"  varchar  NOT NULL UNIQUE,
   "name"  varchar  NOT NULL,
   "version"  varchar  NOT NULL,
   "release"  varchar NOT NULL,
@@ -7,23 +7,23 @@ CREATE TABLE "Event" (
   "package"  varchar  NOT NULL,
   "description"  varchar NOT NULL,
   "payload"  varchar NOT NULL,
-  "gateID"  varchar NOT NULL,
+  "event_reciever_id"  varchar NOT NULL,
   "success"  boolean  NOT NULL,
   CONSTRAINT Event_pk PRIMARY KEY ("ID", "name", "version", "release", "package", "platformID")
 );
 
 CREATE TABLE "Event_reciever" (
-  "ID"  serial  NOT NULL  UNIQUE,
+  "ID"  varchar  NOT NULL  UNIQUE,
   "name"  varchar  NOT NULL,
   "type"  varchar  NOT NULL,
   "version"  varchar  NOT NULL  UNIQUE,
   "description"  varchar  NOT NULL,
   "enabled"  boolean  NOT NULL,
-  CONSTRAINT Event_reciever_pk PRIMARY KEY ("ID", "name", "reciever_type", "version", "enabled")
+  CONSTRAINT Event_reciever_pk PRIMARY KEY ("ID", "name", "type", "version", "enabled")
 );
 
 CREATE TABLE "Event_reciever_group" (
-  "ID"  serial  NOT NULL  UNIQUE,
+  "ID"  varchar  NOT NULL  UNIQUE,
   "name"  varchar NOT NULL,
   "type" varchar NOT NULL,
   "version"  varchar NOT NULL,
@@ -32,14 +32,13 @@ CREATE TABLE "Event_reciever_group" (
 );
 
 CREATE TABLE "Event_reciever_group_to_event_reciever" (
-  "ID" serial NOT NULL autoincrement,
-  "event_reciever_group"  serial,
-  "event_reciever"  serial,
-  CONSTRAINT UNIQUE("event_reciever_group", "event_reciever")
+  "event_reciever_group"  varchar,
+  "event_reciever"  varchar,
+  UNIQUE ("event_reciever_group", "event_reciever")
 );
 
 
-ALTER TABLE "Event" ADD CONSTRAINT "Event_fk0" FOREIGN KEY ("gateID") REFERENCES "Event_reciever"("ID");
+ALTER TABLE "Event" ADD CONSTRAINT "Event_fk0" FOREIGN KEY ("event_reciever_id") REFERENCES "Event_reciever"("ID");
 
 ALTER TABLE "Event_reciever_group_to_event_reciever" ADD CONSTRAINT "Event_reciever_group_to_event_reciever_fk0" FOREIGN KEY ("event_reciever_group") REFERENCES "Event_reciever_group"("ID");
 
