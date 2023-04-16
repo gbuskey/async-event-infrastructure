@@ -2,45 +2,40 @@ CREATE TABLE "Event" (
   "ID"  serial  NOT NULL  UNIQUE,
   "name"  varchar  NOT NULL,
   "version"  varchar  NOT NULL,
-  "release"  varchar,
-  "platformID"  varchar,
+  "release"  varchar NOT NULL,
+  "platformID"  varchar NOT NULL,
   "package"  varchar  NOT NULL,
-  "description"  varchar,
-  "payload"  varchar,
-  "gateID"  varchar,
+  "description"  varchar NOT NULL,
+  "payload"  varchar NOT NULL,
+  "gateID"  varchar NOT NULL,
   "success"  boolean  NOT NULL,
-  CONSTRAINT Event_pk PRIMARY KEY ("ID", "name", "version", "package")
-) WITH (
-  OIDS=FALSE
+  CONSTRAINT Event_pk PRIMARY KEY ("ID", "name", "version", "release", "package", "platformID")
 );
 
 CREATE TABLE "Event_reciever" (
   "ID"  serial  NOT NULL  UNIQUE,
   "name"  varchar  NOT NULL,
-  "event_type"  varchar  NOT NULL,
+  "type"  varchar  NOT NULL,
   "version"  varchar  NOT NULL  UNIQUE,
   "description"  varchar  NOT NULL,
   "enabled"  boolean  NOT NULL,
-  CONSTRAINT Event_reciever_pk PRIMARY KEY ("ID", "name", "event_type", "version", "enabled")
-) WITH (
-  OIDS=FALSE
+  CONSTRAINT Event_reciever_pk PRIMARY KEY ("ID", "name", "reciever_type", "version", "enabled")
 );
 
 CREATE TABLE "Event_reciever_group" (
   "ID"  serial  NOT NULL  UNIQUE,
-  "name"  varchar,
-  "version"  varchar,
+  "name"  varchar NOT NULL,
+  "type" varchar NOT NULL,
+  "version"  varchar NOT NULL,
   "enabled"  boolean  NOT NULL,
-  CONSTRAINT Event_reciever_group_pk PRIMARY KEY ("ID", "enabled")
-) WITH (
-  OIDS=FALSE
+  CONSTRAINT Event_reciever_group_pk PRIMARY KEY ("ID", "type", "name", "version", "enabled")
 );
 
 CREATE TABLE "Event_reciever_group_to_event_reciever" (
+  "ID" serial NOT NULL autoincrement,
   "event_reciever_group"  serial,
-  "event_reciever"  serial
-) WITH (
-  OIDS=FALSE
+  "event_reciever"  serial,
+  CONSTRAINT UNIQUE("event_reciever_group", "event_reciever")
 );
 
 
